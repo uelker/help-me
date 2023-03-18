@@ -13,6 +13,7 @@
         <maven.compiler.target>19</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <jackson.version>2.14.2</jackson.version>
+        <native.maven.plugin.version>0.9.20</native.maven.plugin.version>
     </properties>
 
     <dependencies>
@@ -32,4 +33,42 @@
             <version>${jackson.version}</version>
         </dependency>
     </dependencies>
+
+    <profiles>
+        <profile>
+            <id>native</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.graalvm.buildtools</groupId>
+                        <artifactId>native-maven-plugin</artifactId>
+                        <version>${native.maven.plugin.version}</version>
+                        <extensions>true</extensions>
+                        <executions>
+                            <execution>
+                                <id>build-native</id>
+                                <goals>
+                                    <goal>compile-no-fork</goal>
+                                </goals>
+                                <phase>package</phase>
+                            </execution>
+                            <execution>
+                                <id>test-native</id>
+                                <goals>
+                                    <goal>test</goal>
+                                </goals>
+                                <phase>test</phase>
+                            </execution>
+                        </executions>
+                        <configuration>
+                            <imageName>helpme</imageName>
+                            <mainClass>de.enesuelker.Main</mainClass>
+                            <verbose>true</verbose>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
+
 </project>
